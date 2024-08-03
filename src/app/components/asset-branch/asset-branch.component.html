@@ -1,0 +1,61 @@
+<div>
+  <div class="form-container">
+    <h2>Select Branch and Group to View Assets</h2>
+
+    <form [formGroup]="assetForm" (ngSubmit)="loadAssets()" class="asset-form">
+      <div class="form-group">
+        <label for="branch">Branch:</label>
+        <select formControlName="branchId" id="branch" class="form-control">
+          <option value="">Select Branch</option>
+          <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="group">Group:</label>
+        <select formControlName="groupId" id="group" class="form-control">
+          <option value="">Select Group</option>
+          <option *ngFor="let group of groups" [value]="group.group_id">{{ group.group_name }}</option>
+        </select>
+      </div>
+
+      <button type="submit" class="submit-button">Load Assets</button>
+    </form>
+  </div>
+
+  <div *ngIf="assets.length > 0">
+    <h3>Assets</h3>
+    <table class="asset-table">
+      <thead>
+        <tr>
+          <th>Desktop Name</th>
+          <th>Configuration</th>
+          <th>Tag Name</th>
+          <th>Warranty</th>
+          <th>Price</th>
+          <th>Purchase Date</th>
+          <th>Status</th>
+          <th>Asset Get By</th>
+          <th>Serial Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let asset of assets">
+          <td>{{ asset.desktop_name }}</td>
+          <td>{{ asset.configuration }}</td>
+          <td>{{ asset.tag_name }}</td>
+          <td>{{ asset.warranty }}</td>
+          <td>{{ asset.price | currency }}</td>
+          <td>{{ asset.purchase_date | date }}</td>
+          <td>{{ asset.status }}</td>
+          <td>{{ asset.asset_get_by }}</td>
+          <td>{{ asset.serial_number }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="noDataFound" class="no-data">
+    No Data Found
+  </div>
+</div>

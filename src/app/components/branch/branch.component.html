@@ -1,0 +1,50 @@
+<div class="container">
+  <h1 class="branch-heading">Branch List</h1>
+  <button mat-raised-button color="primary" (click)="openAddBranchDialog()">Add Branch</button>
+
+  <!-- Modal Template for Adding Branch -->
+  <ng-template #addBranchDialog>
+    <h2 mat-dialog-title>Add Branch</h2>
+    <mat-dialog-content>
+      <form [formGroup]="branchForm" (ngSubmit)="submitBranchForm()">
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label>Branch Name</mat-label>
+            <input matInput formControlName="branch_name" required>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label>Branch ID</mat-label>
+            <input matInput type="number" formControlName="number_of_employees" required>
+          </mat-form-field>
+        </div>
+        <div mat-dialog-actions>
+          <button mat-button (click)="closeDialog()">Cancel</button>
+          <button mat-raised-button color="primary" type="submit">Add Branch</button>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </ng-template>
+
+  <h3>Total Branches: {{ totalBranches }}</h3>
+
+  <div class="table-container">
+    <table class="branch-table">
+      <thead>
+        <tr>
+          <th>S. No.</th>
+          <th>Name</th>
+          <th>Branch ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let branch of branches; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ branch.branch_name }}</td>
+          <td>{{ branch.number_of_employees }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th>Branch Name</th>
+        <th *ngFor="let group of groups">{{ group.group_name }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let branch of branches">
+        <td>{{ branch.branch_name }}</td>
+        <td *ngFor="let group of groups">
+          {{ assetCounts[branch.branch_name][group.group_name] || 0 }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
