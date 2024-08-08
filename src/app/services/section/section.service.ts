@@ -16,6 +16,7 @@ interface Asset {
   asset_get_by: string;
   serial_number: string;
   group_name:string;
+  sub_branch:string;
 }
 
 export interface Asset2 {
@@ -33,6 +34,7 @@ export interface Asset2 {
   status: string;
   asset_get_by: string;
   serial_number: string;
+  sub_branch:string;
 }
 
 @Injectable({

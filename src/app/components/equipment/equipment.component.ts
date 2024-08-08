@@ -19,6 +19,7 @@ interface Asset {
   asset_get_by: string;
   serial_number: string;
   group_name:string;
+  sub_branch:string;
 }
 
 export interface Branch {
@@ -60,7 +61,8 @@ export class EquipmentComponent implements OnInit {
       purchase_date: ['', Validators.required],
       status: ['', Validators.required],
       asset_get_by: ['', Validators.required],
-      serial_number: ['', Validators.required]
+      serial_number: ['', Validators.required],
+      sub_branch : ['', Validators.required],
     });
   }
 

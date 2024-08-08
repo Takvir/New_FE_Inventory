@@ -18,6 +18,7 @@ interface Asset {
   asset_get_by: string;
   serial_number: string;
   group_name : string;
+  sub_branch : string;
 }
 
 @Component({
