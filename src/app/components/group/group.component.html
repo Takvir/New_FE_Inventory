@@ -1,0 +1,38 @@
+<div>
+    <h1>Groups</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Group ID</th>
+          <th>Group Name</th>
+          <th>Stock In Hand</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let group of groups">
+          <td>{{ group.group_id }}</td>
+          <td>{{ group.group_name }}</td>
+          <td>{{ group.stock_in_hand }}</td>
+          <td>
+            <button (click)="selectGroup(group)">Edit</button>
+            <button (click)="deleteGroup(group.group_id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <h2>{{ selectedGroup ? 'Update Group' : 'Add New Group' }}</h2>
+    <form [formGroup]="groupForm" (ngSubmit)="selectedGroup ? updateGroup() : addGroup()">
+      <label>
+        Group Name:
+        <input formControlName="group_name">
+      </label>
+      <label>
+        Stock In Hand:
+        <input formControlName="stock_in_hand" type="number">
+      </label>
+      <button type="submit">{{ selectedGroup ? 'Update' : 'Add' }} Group</button>
+    </form>
+  </div>
+  

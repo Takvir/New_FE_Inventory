@@ -18,14 +18,14 @@ export class BranchComponent implements OnInit {
   addBranchDialog!: TemplateRef<any>;
   branch = {
     branch_name: '',
-    number_of_employees: 0
+    branch_id: 0
   };
 
 
   constructor(private branchService: BranchService,private dialog: MatDialog, private fb: FormBuilder) {
     this.branchForm = this.fb.group({
       branch_name: ['', Validators.required],
-      number_of_employees: [0, Validators.required]
+      branch_id: [0, Validators.required]
     });
   }
 

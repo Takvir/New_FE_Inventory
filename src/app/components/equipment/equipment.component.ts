@@ -24,7 +24,7 @@ interface Asset {
 export interface Branch {
   branch_id: number;
   branch_name: string;
-  number_of_employees: number;
+ 
 }
 
 export interface Group {

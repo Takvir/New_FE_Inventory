@@ -26,6 +26,8 @@ import { EquipmentComponent } from './components/equipment/equipment.component';
 import { AssetAllComponent } from './components/asset-all/asset-all.component';
 import { AssetBranchComponent } from './components/asset-branch/asset-branch.component';
 import { AllReportComponent } from './components/all-report/all-report.component';
+import { GroupComponent } from './components/group/group.component';
+import { StockReportComponent } from './components/stock-report/stock-report.component';
 
 
 
@@ -43,6 +45,8 @@ import { AllReportComponent } from './components/all-report/all-report.component
     AssetAllComponent,
     AssetBranchComponent,
     AllReportComponent,
+    GroupComponent,
+    StockReportComponent,
 
 
 
