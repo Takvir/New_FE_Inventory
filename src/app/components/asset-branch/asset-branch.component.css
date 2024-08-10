@@ -1,59 +1,31 @@
 /* asset-branch.component.css */
 
-.asset-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.asset-table th, .asset-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.asset-table th {
-  background-color: #f4f4f4;
-  color: #333;
-}
-
-.asset-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.asset-table tr:hover {
-  background-color: #ddd;
-}
-
-.asset-table td {
-  font-size: 14px;
-}
-
-.asset-table th {
-  font-size: 16px;
-  font-weight: bold;
-}
-
+/* Full-width form container */
 .form-container {
-  max-width: 600px;
+  width: 100%;
+  max-width: 1200px; /* Adjust as needed */
   margin: 0 auto;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
-
 }
 
+/* Flex layout for the form */
 .asset-form {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap; /* Wrap form elements to new line if needed */
+  gap: 16px; /* Space between form elements */
 }
 
+/* Full-width form groups */
 .form-group {
-  margin-bottom: 15px;
+  flex: 1;
+  min-width: 200px;
 }
 
+/* Form labels */
 .form-group label {
   display: block;
   font-weight: bold;
@@ -61,35 +33,75 @@
   color: #333;
 }
 
+/* Form controls */
 .form-control {
-  width: 100%;
-  padding: 10px;
+  width: 100%; /* Adjusted width to full container */
+  padding: 7px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
 }
 
+/* Focus state for form controls */
 .form-control:focus {
   border-color: #007bff;
   outline: none;
   box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
 }
 
+/* Submit button */
 .submit-button {
-  padding: 10px 20px;
+  padding: 8px 12px; /* Adjusted padding for smaller height */
   border: none;
   border-radius: 4px;
-  background-color: #11064f;
+  background-color: #02724b;
   color: #fff;
-  font-size: 18px;
+  font-size: 14px; /* Adjusted font size to match form controls */
   cursor: pointer;
   transition: background-color 0.3s ease;
+  /* Align with form controls */
+  align-self: flex-start; /* Adjust alignment if needed */
 }
 
+/* Submit button hover effect */
 .submit-button:hover {
   background-color: #0056b3;
 }
 
+/* Table styling */
+.asset-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+/* Table headers and cells */
+.asset-table th, .asset-table td {
+  border: 1px solid #ddd;
+  padding: 6px; /* Adjusted padding */
+  text-align: left;
+  font-size: 12px; /* Smaller text size */
+}
+
+/* Table header styling */
+.asset-table th {
+  background-color: #f4f4f4;
+  color: #333;
+  font-size: 14px; /* Smaller header text size */
+  font-weight: bold;
+}
+
+/* Zebra striping for rows */
+.asset-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Hover effect for rows */
+.asset-table tr:hover {
+  background-color: #ddd;
+}
+
+/* No data message */
 .no-data {
   margin-top: 20px;
   padding: 20px;
@@ -97,7 +109,7 @@
   border: 1px solid #ffccd5;
   border-radius: 4px;
   text-align: center;
-  font-size: 20px;
+  font-size: 18px; /* Adjusted font size */
   color: #d9534f;
   font-weight: bold;
 }

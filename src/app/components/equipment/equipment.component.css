@@ -47,7 +47,7 @@ label {
 /* Form control styling */
 .form-control {
   width: 100%; /* Full width */
-  padding: 6px; /* Reduced padding */
+  padding: 5px; /* Reduced padding */
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box; /* Include padding in width */
@@ -56,7 +56,7 @@ label {
 
 /* Select styling */
 select.form-control {
-  height: 36px; /* Consistent height */
+  height: 31.5px; /* Consistent height */
 }
 
 /* Dropdown options styling */
