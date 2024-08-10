@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SectionService } from 'src/app/services/section/section.service';
 import { BranchService } from 'src/app/services/branch/branch.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GroupService } from 'src/app/services/group/group.service';
 
 interface Asset {
@@ -22,6 +22,23 @@ interface Asset {
   sub_branch: string;
 }
 
+interface UpdateAsset {
+  branch_id: number;
+  branch_name: string;
+  group_id: number;
+  desktop_name: string;
+  configuration: string;
+  tag_name: string;
+  warranty: string;
+  price: number;
+  purchase_date: string;
+  status: string;
+  asset_get_by: string;
+  serial_number: string;
+  sub_branch: string;
+  group_name: string;
+}
+
 export interface Branch {
   branch_id: number;
   branch_name: string;
@@ -34,11 +51,11 @@ export interface Group {
 }
 
 @Component({
-  selector: 'app-equipment',
-  templateUrl: './equipment.component.html',
-  styleUrls: ['./equipment.component.css']
+  selector: 'app-tag-entry',
+  templateUrl: './tag-entry.component.html',
+  styleUrls: ['./tag-entry.component.css']
 })
-export class EquipmentComponent implements OnInit {
+export class TagEntryComponent implements OnInit {
   assets: Asset[] = [];
   assetForm!: FormGroup;
   isEdit: boolean = false;
@@ -67,6 +84,7 @@ export class EquipmentComponent implements OnInit {
       asset_get_by: ['', Validators.required],
       serial_number: ['', Validators.required],
       sub_branch: ['', Validators.required],
+      group_name: ['', Validators.required] // Add this line
     });
   }
 
@@ -79,14 +97,12 @@ export class EquipmentComponent implements OnInit {
   loadBranches(): void {
     this.branchService.getBranches().subscribe((data: Branch[]) => {
       this.branches = data;
-      console.log(this.branches);
     });
   }
 
   loadGroups(): void {
     this.groupService.getGroups().subscribe((data: Group[]) => {
       this.groups = data;
-      console.log(this.groups);
     });
   }
 
@@ -96,67 +112,33 @@ export class EquipmentComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    if (this.assetForm.invalid) {
-      return;
-    }
-
-    const asset: Asset = this.assetForm.value;
-
-    if (this.isEdit && this.editAssetId !== null) {
-      this.assetService.updateAsset(this.editAssetId, asset).subscribe(() => {
-        this.loadAssets();
-        this.resetForm();
-      });
-    } else {
-      this.assetService.addAsset(asset).subscribe(() => {
-        this.loadAssets();
-        this.resetForm();
-      });
-    }
-  }
-
   onEdit(asset: Asset): void {
     this.isEdit = true;
     this.editAssetId = asset.id;
-    this.assetForm.patchValue(asset);
+    // Patch the form without the `id`
+    this.assetForm.patchValue({
+      branch_id: asset.branch_id,
+      branch_name: asset.branch_name,
+      group_id: asset.group_id,
+      desktop_name: asset.desktop_name,
+      configuration: asset.configuration,
+      tag_name: asset.tag_name,
+      warranty: asset.warranty,
+      price: asset.price,
+      purchase_date: asset.purchase_date,
+      status: asset.status,
+      asset_get_by: asset.asset_get_by,
+      serial_number: asset.serial_number,
+      sub_branch: asset.sub_branch,
+      group_name: asset.group_name // Add this line
+    });
   }
 
-  onDelete(id: number): void {
-    this.assetService.deleteAsset(id).subscribe(() => this.loadAssets());
-  }
 
-  resetForm(): void {
+
+  onCancel(): void {
     this.isEdit = false;
     this.editAssetId = null;
     this.assetForm.reset();
-  }
-
-  onBranchChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedBranchId = parseInt(selectElement.value, 10);
-    const selectedBranch = this.branches.find(branch => branch.branch_id === selectedBranchId);
-    if (selectedBranch) {
-      this.assetForm.patchValue({
-        branch_name: selectedBranch.branch_name
-      });
-
-      if (selectedBranch.branch_name === 'Head Office') {
-        this.subBranchOptions = [
-          'Chairman Sir & MD & CEO Office',
-          'Agent Banking',
-          'AML & CFT',
-          'ICT',
-          'ADC',
-          'Card Division'
-        ];
-      } else {
-        this.subBranchOptions = ['N/A'];
-      }
-
-      this.assetForm.patchValue({
-        sub_branch: this.subBranchOptions[0]
-      });
-    }
   }
 }

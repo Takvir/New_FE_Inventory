@@ -28,6 +28,7 @@ import { AssetBranchComponent } from './components/asset-branch/asset-branch.com
 import { AllReportComponent } from './components/all-report/all-report.component';
 import { GroupComponent } from './components/group/group.component';
 import { StockReportComponent } from './components/stock-report/stock-report.component';
+import { TagEntryComponent } from './components/tag-entry/tag-entry.component';
 
 
 
@@ -47,6 +48,7 @@ import { StockReportComponent } from './components/stock-report/stock-report.com
     AllReportComponent,
     GroupComponent,
     StockReportComponent,
+    TagEntryComponent,
 
 
 

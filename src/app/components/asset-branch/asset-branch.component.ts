@@ -24,7 +24,6 @@ export interface Asset {
 export interface Branch {
   branch_id: number;
   branch_name: string;
-  
 }
 
 export interface Group {
@@ -44,6 +43,7 @@ export class AssetBranchComponent implements OnInit {
   groups: Group[] = [];
   assets: Asset[] = [];
   assetForm!: FormGroup;
+  subBranchOptions: string[] = [];
   noDataFound: boolean = false;
 
   constructor(
@@ -56,7 +56,8 @@ export class AssetBranchComponent implements OnInit {
   ngOnInit(): void {
     this.assetForm = this.fb.group({
       branchId: ['', Validators.required],
-      groupId: ['', Validators.required]
+      groupId: ['', Validators.required],
+      subBranch: [{ value: '', disabled: true }]
     });
 
     this.loadBranches();
@@ -77,10 +78,39 @@ export class AssetBranchComponent implements OnInit {
     });
   }
 
+  onBranchChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedBranchId = parseInt(selectElement.value, 10);
+    const selectedBranch = this.branches.find(branch => branch.branch_id === selectedBranchId);
+
+    if (selectedBranch && selectedBranch.branch_name === 'Head Office') {
+      this.subBranchOptions = [
+
+        'Chairman Sir & MD & CEO Office',
+        'Agent Banking',
+        'AML & CFT',
+        'ICT',
+        'ADC',
+        'Card Division'
+      ];
+      this.assetForm.get('subBranch')?.enable();
+    } else {
+      this.subBranchOptions = ['Select Division'];
+      this.assetForm.get('subBranch')?.disable();
+      this.assetForm.patchValue({ subBranch: 'Select Division' });
+    }
+  }
+
   loadAssets(): void {
-    const { branchId, groupId } = this.assetForm.value;
+    const { branchId, groupId, subBranch } = this.assetForm.value;
     this.noDataFound = false;
-    if (branchId && groupId) {
+
+    if (branchId && groupId && subBranch) {
+      this.assetService.getAssetsByBranchGroupAndSubBranch(branchId, groupId, subBranch).subscribe((data: Asset[]) => {
+        this.assets = data;
+        this.noDataFound = data.length === 0;
+      });
+    } else if (branchId && groupId) {
       this.assetService.getAssetsByBranchAndGroup(branchId, groupId).subscribe((data: Asset[]) => {
         this.assets = data;
         this.noDataFound = data.length === 0;

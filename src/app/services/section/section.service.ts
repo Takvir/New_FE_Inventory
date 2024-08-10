@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpParams  } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 interface Asset {
   id: number;
   branch_id: number;
@@ -15,8 +16,8 @@ interface Asset {
   status: string;
   asset_get_by: string;
   serial_number: string;
-  group_name:string;
-  sub_branch:string;
+  group_name: string;
+  sub_branch: string;
 }
 
 export interface Asset2 {
@@ -34,8 +35,27 @@ export interface Asset2 {
   status: string;
   asset_get_by: string;
   serial_number: string;
-  sub_branch:string;
+  sub_branch: string;
 }
+
+
+interface UpdateAsset {
+  branch_id: number;
+  branch_name: string;
+  group_id: number;
+  desktop_name: string;
+  configuration: string;
+  tag_name: string;
+  warranty: string;
+  price: number;
+  purchase_date: string;
+  status: string;
+  asset_get_by: string;
+  serial_number: string;
+  sub_branch: string;
+  group_name: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -72,8 +92,16 @@ export class SectionService {
   getAssetsByBranch(branchId: number): Observable<Asset2[]> {
     return this.http.get<Asset2[]>(`${this.apiUrl}/branch/${branchId}`);
   }
+
   getAssetsByGroup(groupId: number): Observable<Asset2[]> {
     return this.http.get<Asset2[]>(`${this.apiUrl}/group/${groupId}`);
   }
 
+  getAssetsByBranchGroupAndSubBranch(branchId: number, groupId: number, subBranch: string): Observable<Asset2[]> {
+    return this.http.get<Asset2[]>(`${this.apiUrl}/branch/${branchId}/group/${groupId}/sub_branch/${subBranch}`);
+  }
+
+  getAssetsByBranchAndSubBranch(branchId: number, subBranch: string): Observable<Asset2[]> {
+    return this.http.get<Asset2[]>(`${this.apiUrl}/branch/${branchId}/sub_branch/${subBranch}`);
+  }
 }

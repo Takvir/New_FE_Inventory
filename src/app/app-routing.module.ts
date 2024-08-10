@@ -9,6 +9,7 @@ import { AssetBranchComponent } from './components/asset-branch/asset-branch.com
 import { AllReportComponent } from './components/all-report/all-report.component';
 import { GroupComponent } from './components/group/group.component';
 import { StockReportComponent } from './components/stock-report/stock-report.component';
+import { TagEntryComponent } from './components/tag-entry/tag-entry.component';
 
 
 
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'branch-asset', component: AssetBranchComponent  },
   { path: 'summary', component: AllReportComponent  },
   { path: 'group-add' , component:GroupComponent},
-  { path: 'stock-report' , component: StockReportComponent}
+  { path: 'stock-report' , component: StockReportComponent},
+  { path: 'tag-entry' , component: TagEntryComponent}
 
 
 
