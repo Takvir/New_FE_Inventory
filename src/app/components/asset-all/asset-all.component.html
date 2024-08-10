@@ -1,6 +1,15 @@
 <div class="asset-container">
+  <!-- Page Header -->
+  <header class="page-header">
+    <h1 class="page-title">Asset List</h1>
+  </header>
 
+  <!-- Search Input -->
+  <div class="search-container">
+    <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchQueryChange()" placeholder="Search assets..." class="search-input">
+  </div>
 
+  <!-- Table Container -->
   <div class="table-container">
     <table>
       <thead>
@@ -21,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let asset of assets; let i = index">
+        <tr *ngFor="let asset of filteredAssets; let i = index">
           <td>{{ i + 1 }}</td>
           <td>{{ asset.branch_name }}</td>
           <td>{{ asset.sub_branch }}</td>
@@ -30,7 +39,7 @@
           <td>{{ asset.configuration }}</td>
           <td>{{ asset.price }}</td>
           <td>{{ asset.serial_number }}</td>
-          <td>{{ asset.warranty | date}}</td>
+          <td>{{ asset.warranty | date }}</td>
           <td>{{ asset.purchase_date | date }}</td>
           <td>{{ asset.status }}</td>
           <td>{{ asset.asset_get_by }}</td>
@@ -39,5 +48,4 @@
       </tbody>
     </table>
   </div>
-
 </div>
