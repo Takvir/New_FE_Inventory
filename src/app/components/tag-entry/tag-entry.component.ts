@@ -1,42 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SectionService } from 'src/app/services/section/section.service';
 import { BranchService } from 'src/app/services/branch/branch.service';
 import { GroupService } from 'src/app/services/group/group.service';
+import { TagAssetService,  } from 'src/app/services/tag-asset/tag-asset.service';
 
-interface Asset {
-  id: number;
+export interface Asset {
+  asset_id: number;
   branch_id: number;
   branch_name: string;
   group_id: number;
+  group_name: string;
   desktop_name: string;
   configuration: string;
   tag_name: string;
   warranty: string;
   price: number;
-  purchase_date: string;
-  status: string;
-  asset_get_by: string;
-  serial_number: string;
-  group_name: string;
-  sub_branch: string;
-}
-
-interface UpdateAsset {
-  branch_id: number;
-  branch_name: string;
-  group_id: number;
-  desktop_name: string;
-  configuration: string;
-  tag_name: string;
-  warranty: string;
-  price: number;
-  purchase_date: string;
+  purchase_date: Date;
   status: string;
   asset_get_by: string;
   serial_number: string;
   sub_branch: string;
-  group_name: string;
 }
 
 export interface Branch {
@@ -63,16 +46,16 @@ export class TagEntryComponent implements OnInit {
   branches: Branch[] = [];
   groups: Group[] = [];
   subBranchOptions: string[] = [];
+  noDataFound: boolean = false;
 
   constructor(
-    private assetService: SectionService,
+    private tagService: TagAssetService,
     private branchService: BranchService,
     private groupService: GroupService,
     private fb: FormBuilder
   ) {
     this.assetForm = this.fb.group({
       branch_id: ['', Validators.required],
-      branch_name: ['', Validators.required],
       group_id: ['', Validators.required],
       desktop_name: ['', Validators.required],
       configuration: ['', Validators.required],
@@ -84,14 +67,14 @@ export class TagEntryComponent implements OnInit {
       asset_get_by: ['', Validators.required],
       serial_number: ['', Validators.required],
       sub_branch: ['', Validators.required],
-      group_name: ['', Validators.required] // Add this line
+      group_name: ['', Validators.required],
+      branch_name: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.loadAssets();
-    this.loadGroups();
     this.loadBranches();
+    this.loadGroups();
   }
 
   loadBranches(): void {
@@ -106,39 +89,117 @@ export class TagEntryComponent implements OnInit {
     });
   }
 
+  onBranchChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedBranchId = parseInt(selectElement.value, 10);
+    const selectedBranch = this.branches.find(branch => branch.branch_id === selectedBranchId);
+
+    if (selectedBranch && selectedBranch.branch_name === 'Head Office') {
+      this.subBranchOptions = [
+        'Select Division',
+        'Chairman Sir & MD & CEO Office',
+        'Agent Banking',
+        'AML & CFT',
+        'ICT',
+        'ADC',
+        'Card Division'
+      ];
+      this.assetForm.get('subBranch')?.enable();
+    } else {
+      this.subBranchOptions = ['Select Division'];
+      this.assetForm.get('subBranch')?.disable();
+      this.assetForm.patchValue({ subBranch: 'Select Division' });
+    }
+  }
+
   loadAssets(): void {
-    this.assetService.getAssets().subscribe(assets => {
-      this.assets = assets;
-    });
+    const { branch_id, group_id, sub_branch } = this.assetForm.value;
+    this.noDataFound = false;
+
+    if (branch_id && group_id && sub_branch && sub_branch !== 'Select Division') {
+      this.tagService.getAssetsByBranchGroupAndSubBranch(branch_id, group_id, sub_branch).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
+      });
+    } else if (branch_id && sub_branch && sub_branch !== 'Select Division') {
+      this.tagService.getAssetsByBranchAndSubBranch(branch_id, sub_branch).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
+      });
+    } else if (branch_id && group_id) {
+      this.tagService.getAssetsByBranchAndGroup(branch_id, group_id).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
+      });
+    } else if (branch_id) {
+      this.tagService.getAssetsByBranch(branch_id).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
+      });
+    } else if (group_id) {
+      this.tagService.getAssetsByGroup(group_id).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
+      });
+    }
   }
 
-  onEdit(asset: Asset): void {
+  editAsset(assetId: number): void {
     this.isEdit = true;
-    this.editAssetId = asset.id;
-    // Patch the form without the `id`
-    this.assetForm.patchValue({
-      branch_id: asset.branch_id,
-      branch_name: asset.branch_name,
-      group_id: asset.group_id,
-      desktop_name: asset.desktop_name,
-      configuration: asset.configuration,
-      tag_name: asset.tag_name,
-      warranty: asset.warranty,
-      price: asset.price,
-      purchase_date: asset.purchase_date,
-      status: asset.status,
-      asset_get_by: asset.asset_get_by,
-      serial_number: asset.serial_number,
-      sub_branch: asset.sub_branch,
-      group_name: asset.group_name // Add this line
+    this.editAssetId = assetId;
+    this.tagService.getAssetById(assetId).subscribe(asset => {
+      this.assetForm.patchValue({
+        ...asset,
+        branch_id: asset.branch_id,
+        group_id: asset.group_id
+      });
     });
   }
 
+  onSubmit(): void {
+    if (this.assetForm.valid) {
+      if (this.isEdit && this.editAssetId) {
+        this.tagService.updateAsset(this.editAssetId, this.assetForm.value).subscribe(() => {
+          this.loadAssets();
+          this.resetForm();
+        });
+      }
+    }
+  }
 
-
-  onCancel(): void {
+  resetForm(): void {
+    this.assetForm.reset();
     this.isEdit = false;
     this.editAssetId = null;
-    this.assetForm.reset();
   }
 }

@@ -1,0 +1,161 @@
+<div>
+  <div class="form-container">
+    <h2>Select Branch, Group, and Sub Branch to View Assets</h2>
+
+    <form [formGroup]="assetForm" (ngSubmit)="loadAssets()" class="asset-form">
+      <div class="form-group">
+        <label for="branch">Branch:</label>
+        <select formControlName="branch_id" id="branch" class="form-control" (change)="onBranchChange($event)">
+          <option value="">Select Branch</option>
+          <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="group">Group:</label>
+        <select formControlName="group_id" id="group" class="form-control">
+          <option value="">Select Group</option>
+          <option *ngFor="let group of groups" [value]="group.group_id">{{ group.group_name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="subBranch">Sub Branch:</label>
+        <select formControlName="sub_branch" id="subBranch" class="form-control" [disabled]="!assetForm.get('branch_id')?.value">
+          <option value="">Select Division</option>
+          <option *ngFor="let option of subBranchOptions" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+
+      <button type="submit" class="submit-button">Load Assets</button>
+    </form>
+  </div>
+
+  <div *ngIf="assets.length > 0">
+    <h3>Assets</h3>
+    <table class="asset-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Branch</th>
+          <th>Group</th>
+          <th>Desktop Name</th>
+          <th>Configuration</th>
+          <th>Tag Name</th>
+          <th>Warranty</th>
+          <th>Price</th>
+          <th>Purchase Date</th>
+          <th>Status</th>
+          <th>Asset Get By</th>
+          <th>Serial Number</th>
+          <th>Sub Branch</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let asset of assets">
+          <td>{{ asset.asset_id }}</td>
+          <td>{{ asset.branch_name }}</td>
+          <td>{{ asset.group_name }}</td>
+          <td>{{ asset.desktop_name }}</td>
+          <td>{{ asset.configuration }}</td>
+          <td>{{ asset.tag_name }}</td>
+          <td>{{ asset.warranty | date }}</td>
+          <td>{{ asset.price }}</td>
+          <td>{{ asset.purchase_date | date }}</td>
+          <td>{{ asset.status }}</td>
+          <td>{{ asset.asset_get_by }}</td>
+          <td>{{ asset.serial_number }}</td>
+          <td>{{ asset.sub_branch }}</td>
+          <td>
+            <button (click)="editAsset(asset.asset_id)">Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="noDataFound" class="no-data">
+    No Data Found
+  </div>
+</div>
+
+<!-- Asset Form for Updating -->
+<div *ngIf="isEdit">
+  <h2>Update Asset</h2>
+  <form [formGroup]="assetForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="branch">Branch:</label>
+      <select id="branch" formControlName="branch_id">
+        <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="group">Group:</label>
+      <select id="group" formControlName="group_id">
+        <option *ngFor="let group of groups" [value]="group.group_id">{{ group.group_name }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="sub_branch">Sub Branch:</label>
+      <select id="sub_branch" formControlName="sub_branch">
+        <option *ngFor="let option of subBranchOptions" [value]="option">{{ option }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="desktop_name">Desktop Name:</label>
+      <input id="desktop_name" formControlName="desktop_name" type="text">
+    </div>
+
+    <div class="form-group">
+      <label for="configuration">Configuration:</label>
+      <input id="configuration" formControlName="configuration" type="text">
+    </div>
+
+    <div class="form-group">
+      <label for="tag_name">Tag Name:</label>
+      <input id="tag_name" formControlName="tag_name" type="text">
+    </div>
+
+    <div class="form-group">
+      <label for="warranty">Warranty:</label>
+      <input id="warranty" formControlName="warranty" type="date">
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price:</label>
+      <input id="price" formControlName="price" type="number" step="0.01">
+    </div>
+
+    <div class="form-group">
+      <label for="purchase_date">Purchase Date:</label>
+      <input id="purchase_date" formControlName="purchase_date" type="date">
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status:</label>
+      <input id="status" formControlName="status" type="text">
+    </div>
+
+    <div class="form-group">
+      <label for="asset_get_by">Asset Get By:</label>
+      <input id="asset_get_by" formControlName="asset_get_by" type="text">
+    </div>
+
+    <div class="form-group">
+      <label for="serial_number">Serial Number:</label>
+      <input id="serial_number" formControlName="serial_number" type="text">
+    </div>
+
+    <div class="form-group">
+      <label for="sub_branch">Sub Branch:</label>
+      <input id="sub_branch" formControlName="sub_branch" type="text">
+    </div>
+
+    <button type="submit">Update Asset</button>
+    <button type="button" (click)="resetForm()">Cancel</button>
+  </form>
+</div>
