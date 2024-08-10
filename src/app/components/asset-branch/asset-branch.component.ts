@@ -19,6 +19,7 @@ export interface Asset {
   status: string;
   asset_get_by: string;
   serial_number: string;
+  sub_branch: string;
 }
 
 export interface Branch {
@@ -67,14 +68,12 @@ export class AssetBranchComponent implements OnInit {
   loadBranches(): void {
     this.branchService.getBranches().subscribe((data: Branch[]) => {
       this.branches = data;
-      console.log(this.branches);
     });
   }
 
   loadGroups(): void {
     this.groupService.getGroups().subscribe((data: Group[]) => {
       this.groups = data;
-      console.log(this.groups);
     });
   }
 
@@ -85,7 +84,7 @@ export class AssetBranchComponent implements OnInit {
 
     if (selectedBranch && selectedBranch.branch_name === 'Head Office') {
       this.subBranchOptions = [
-
+        'Select Division',
         'Chairman Sir & MD & CEO Office',
         'Agent Banking',
         'AML & CFT',
@@ -100,31 +99,69 @@ export class AssetBranchComponent implements OnInit {
       this.assetForm.patchValue({ subBranch: 'Select Division' });
     }
   }
-
   loadAssets(): void {
     const { branchId, groupId, subBranch } = this.assetForm.value;
     this.noDataFound = false;
 
-    if (branchId && groupId && subBranch) {
-      this.assetService.getAssetsByBranchGroupAndSubBranch(branchId, groupId, subBranch).subscribe((data: Asset[]) => {
-        this.assets = data;
-        this.noDataFound = data.length === 0;
+      if (branchId && groupId && subBranch && subBranch !== 'Select Division') {
+      this.assetService.getAssetsByBranchGroupAndSubBranch(branchId, groupId, subBranch).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
       });
-    } else if (branchId && groupId) {
-      this.assetService.getAssetsByBranchAndGroup(branchId, groupId).subscribe((data: Asset[]) => {
-        this.assets = data;
-        this.noDataFound = data.length === 0;
+    }
+    else if (branchId && subBranch && subBranch !== 'Select Division') {
+      this.assetService.getAssetsByBranchAndSubBranch(branchId, subBranch).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
+      });
+    }
+    else if (branchId && groupId) {
+      this.assetService.getAssetsByBranchAndGroup(branchId, groupId).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
       });
     } else if (branchId) {
-      this.assetService.getAssetsByBranch(branchId).subscribe((data: Asset[]) => {
-        this.assets = data;
-        this.noDataFound = data.length === 0;
+      this.assetService.getAssetsByBranch(branchId).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
       });
     } else if (groupId) {
-      this.assetService.getAssetsByGroup(groupId).subscribe((data: Asset[]) => {
-        this.assets = data;
-        this.noDataFound = data.length === 0;
+      this.assetService.getAssetsByGroup(groupId).subscribe({
+        next: (data: Asset[]) => {
+          this.assets = data;
+          this.noDataFound = data.length === 0;
+        },
+        error: (error) => {
+          console.error('Error loading assets:', error);
+          this.noDataFound = true;
+        }
       });
     }
   }
+
+
 }
