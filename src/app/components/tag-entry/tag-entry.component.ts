@@ -47,6 +47,7 @@ export class TagEntryComponent implements OnInit {
   groups: Group[] = [];
   subBranchOptions: string[] = [];
   noDataFound: boolean = false;
+  disableMessage = true;
 
   constructor(
     private tagService: TagAssetService,
@@ -75,6 +76,9 @@ export class TagEntryComponent implements OnInit {
   ngOnInit(): void {
     this.loadBranches();
     this.loadGroups();
+   
+   
+    
   }
 
   loadBranches(): void {

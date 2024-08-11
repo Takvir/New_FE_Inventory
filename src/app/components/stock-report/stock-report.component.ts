@@ -77,4 +77,29 @@ export class StockReportComponent implements OnInit {
   getStockInHand(groupName: string): number {
     return this.groups.find(group => group.group_name === groupName)?.stock_in_hand || 0;
   }
+  downloadCSV(): void {
+    let csvContent = 'data:text/csv;charset=utf-8,';
+    csvContent += 'Asset Name,Number of Devices (Total),Active,In Active,Faulty,Stock In Hand\n';
+  
+    this.groups.forEach(group => {
+      const totalDevices = this.getTotalDevices(group.group_name);
+      const active = this.groupStatusCounts[group.group_name]?.['Active'] || 0;
+      const inactive = this.groupStatusCounts[group.group_name]?.['InActive'] || 0;
+      const faulty = this.groupStatusCounts[group.group_name]?.['Faulty'] || 0;
+      const stockInHand = this.getStockInHand(group.group_name);
+  
+      csvContent += `${group.group_name},${totalDevices},${active},${inactive},${faulty},${stockInHand}\n`;
+    });
+  
+    // Create a download link and trigger the download
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'stock_report.csv');
+    document.body.appendChild(link); // Required for Firefox
+  
+    link.click();
+    document.body.removeChild(link);
+  }
+  
 }

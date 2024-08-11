@@ -6,17 +6,7 @@ export interface Group2 {
   group_id: number;
   group_name: string;
   stock_in_hand: number;
-  
 }
-
-
-export interface Group {
-  group_id: number;
-  group_name: string;
-  branch_id: number;
-}
-
-
 
 @Component({
   selector: 'app-group',
@@ -28,8 +18,9 @@ export class GroupComponent implements OnInit {
   groups: Group2[] = [];
   groupForm!: FormGroup;
   selectedGroup: Group2 | null = null;
+  isModalOpen = false;
 
-  constructor(  private groupService: GroupService,private fb: FormBuilder ) { 
+  constructor(private groupService: GroupService, private fb: FormBuilder) { 
     this.groupForm = this.fb.group({
       group_name: ['', Validators.required],
       stock_in_hand: [0, [Validators.required, Validators.min(0)]]
@@ -37,7 +28,7 @@ export class GroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   this.loadGroups();
+    this.loadGroups();
   }
 
   loadGroups(): void {
@@ -46,12 +37,22 @@ export class GroupComponent implements OnInit {
     });
   }
 
-  selectGroup(group: Group2): void {
-    this.selectedGroup = group;
-    this.groupForm.setValue({
-      group_name: group.group_name,
-      stock_in_hand: group.stock_in_hand
-    });
+  openModal(group?: Group2): void {
+    if (group) {
+      this.selectedGroup = group;
+      this.groupForm.setValue({
+        group_name: group.group_name,
+        stock_in_hand: group.stock_in_hand
+      });
+    } else {
+      this.selectedGroup = null;
+      this.groupForm.reset();
+    }
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
   }
 
   addGroup(): void {
@@ -59,10 +60,11 @@ export class GroupComponent implements OnInit {
       const group: Group2 = this.groupForm.value;
       this.groupService.createGroup(group).subscribe(() => {
         this.loadGroups();
-        this.groupForm.reset();
+        this.closeModal();
       });
     }
   }
+
   updateGroup(): void {
     if (this.groupForm.valid && this.selectedGroup) {
       const updatedGroup: Group2 = {
@@ -71,8 +73,7 @@ export class GroupComponent implements OnInit {
       };
       this.groupService.updateGroup(updatedGroup.group_id, updatedGroup).subscribe(() => {
         this.loadGroups();
-        this.groupForm.reset();
-        this.selectedGroup = null;
+        this.closeModal();
       });
     }
   }
@@ -82,6 +83,4 @@ export class GroupComponent implements OnInit {
       this.loadGroups();
     });
   }
- 
-
 }

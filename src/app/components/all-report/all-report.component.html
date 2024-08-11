@@ -1,9 +1,14 @@
 <div>
+  <!-- Download Button -->
+
+
+  <!-- Table -->
   <table>
     <thead>
       <tr>
         <th>Branch Name</th>
         <th *ngFor="let group of groups">{{ group.group_name }}</th>
+        <th>Total</th>
       </tr>
     </thead>
     <tbody>
@@ -12,7 +17,20 @@
         <td *ngFor="let group of groups">
           {{ assetCounts[branch.branch_name][group.group_name] || 0 }}
         </td>
+        <td>{{ rowTotals[branch.branch_name] || 0 }}</td>
       </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <td><strong>Total</strong></td>
+        <td *ngFor="let group of groups">
+          {{ columnTotals[group.group_name] || 0 }}
+        </td>
+        <td><strong>{{ grandTotal }}</strong></td>
+      </tr>
+    </tfoot>
   </table>
+  <div class="download-container">
+    <button (click)="downloadTableData()" class="download-button">Download</button>
+  </div>
 </div>

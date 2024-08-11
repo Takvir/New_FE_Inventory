@@ -22,7 +22,6 @@ interface Asset {
 export interface Branch {
   branch_id: number;
   branch_name: string;
-  
 }
 
 export interface Group {
@@ -47,6 +46,9 @@ export class AllReportComponent implements OnInit {
   branches: Branch[] = [];
   groups: Group[] = [];
   assetCounts: AssetCount = {};
+  rowTotals: { [branchName: string]: number } = {};
+  columnTotals: { [groupName: string]: number } = {};
+  grandTotal: number = 0;
 
   constructor(
     private assetService: SectionService,
@@ -80,19 +82,65 @@ export class AllReportComponent implements OnInit {
   }
 
   calculateAssetCounts(): void {
+    this.assetCounts = {};
+    this.rowTotals = {};
+    this.columnTotals = {};
+    this.grandTotal = 0;
+
+    // Initialize asset counts for branches and groups
     this.branches.forEach(branch => {
       this.assetCounts[branch.branch_name] = {};
+      this.rowTotals[branch.branch_name] = 0;
+
       this.groups.filter(group => group.branch_id === branch.branch_id).forEach(group => {
         this.assetCounts[branch.branch_name][group.group_name] = 0;
+        this.columnTotals[group.group_name] = 0;
       });
     });
 
+    // Count assets
     this.assets.forEach(asset => {
       const branchName = asset.branch_name;
       const groupName = this.groups.find(group => group.group_id === asset.group_id)?.group_name;
+
       if (groupName) {
         this.assetCounts[branchName][groupName] = (this.assetCounts[branchName][groupName] || 0) + 1;
+        this.rowTotals[branchName] = (this.rowTotals[branchName] || 0) + 1;
+        this.columnTotals[groupName] = (this.columnTotals[groupName] || 0) + 1;
+        this.grandTotal++;
       }
     });
+  }
+
+  downloadTableData(): void {
+    const csvData = this.convertToCSV();
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'assets_report.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  convertToCSV(): string {
+    // Create CSV header
+    const header = ['Branch Name', ...this.groups.map(group => group.group_name), 'Total'].join(',') + '\n';
+
+    // Create CSV rows
+    const rows = this.branches.map(branch => [
+      branch.branch_name,
+      ...this.groups.map(group => this.assetCounts[branch.branch_name][group.group_name] || 0),
+      this.rowTotals[branch.branch_name] || 0
+    ].join(',')).join('\n');
+
+    // Add totals row
+    const totalsRow = [
+      'Total',
+      ...this.groups.map(group => this.columnTotals[group.group_name] || 0),
+      this.grandTotal
+    ].join(',');
+
+    return header + rows + '\n' + totalsRow;
   }
 }

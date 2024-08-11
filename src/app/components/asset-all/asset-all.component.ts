@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { SectionService } from 'src/app/services/section/section.service';
-import { BranchService } from 'src/app/services/branch/branch.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 interface Asset {
@@ -30,11 +29,9 @@ export class AssetAllComponent implements OnInit {
   assets: Asset[] = [];
   filteredAssets: Asset[] = [];
   assetForm!: FormGroup;
-  isEdit: boolean = false;
-  editAssetId: number | null = null;
   searchQuery: string = '';
 
-  constructor(private assetService: SectionService, private branchService: BranchService, private fb: FormBuilder) {
+  constructor(private assetService: SectionService, private fb: FormBuilder) {
     this.assetForm = this.fb.group({
       branch_id: ['', Validators.required],
       branch_name: ['', Validators.required],
@@ -64,7 +61,7 @@ export class AssetAllComponent implements OnInit {
 
   filterAssets(): void {
     const query = this.searchQuery.toLowerCase();
-    this.filteredAssets = this.assets.filter(asset =>
+    this.filteredAssets = this.assets.filter(asset => 
       asset.branch_name.toLowerCase().includes(query) ||
       asset.sub_branch.toLowerCase().includes(query) ||
       asset.group_name.toLowerCase().includes(query) ||
@@ -72,11 +69,49 @@ export class AssetAllComponent implements OnInit {
       asset.configuration.toLowerCase().includes(query) ||
       asset.price.toString().toLowerCase().includes(query) ||
       asset.serial_number.toLowerCase().includes(query) ||
-      asset.tag_name.toLowerCase().includes(query)
+      asset.tag_name.toLowerCase().includes(query) ||
+      (asset.status && asset.status.toString().toLowerCase().includes(query)) // Handle status field
     );
   }
+  
 
   onSearchQueryChange(): void {
     this.filterAssets();
+  }
+
+  downloadTableData(): void {
+    const csvData = this.convertToCSV(this.filteredAssets);
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'AllAsset.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  convertToCSV(assets: Asset[]): string {
+    const header = [
+      'Sl No.', 'Branch Name', 'Sub Branch Name', 'Group Name', 'Desktop Name', 'Configuration', 
+      'Price', 'Serial Number', 'Warranty', 'Purchase Date', 'Status', 'Asset Get By', 'Tag Name'
+    ].join(',') + '\n';
+
+    const rows = assets.map((asset, index) => [
+      index + 1,
+      asset.branch_name,
+      asset.sub_branch,
+      asset.group_name,
+      asset.desktop_name,
+      asset.configuration,
+      asset.price,
+      asset.serial_number,
+      asset.warranty,
+      asset.purchase_date,
+      asset.status,
+      asset.asset_get_by,
+      asset.tag_name
+    ].join(',')).join('\n');
+
+    return header + rows;
   }
 }

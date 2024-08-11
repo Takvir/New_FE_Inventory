@@ -1,6 +1,9 @@
 <div class="asset-container">
-    <h1 class="branch-heading">Stock Report</h1>
-  
+  <h1 class="branch-heading">Stock Report</h1>
+
+
+
+  <div class="table-container">
     <table class="stock-table">
       <thead>
         <tr>
@@ -24,4 +27,8 @@
       </tbody>
     </table>
   </div>
-  
+
+  <div class="download-container">
+    <button (click)="downloadCSV()" class="download-button">Download</button>
+  </div>
+</div>

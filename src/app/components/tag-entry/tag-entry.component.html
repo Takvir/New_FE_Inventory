@@ -1,33 +1,36 @@
+<!-- Asset Form for Viewing Assets -->
 <div>
   <div class="form-container">
     <h2>Select Branch, Group, and Sub Branch to View Assets</h2>
 
     <form [formGroup]="assetForm" (ngSubmit)="loadAssets()" class="asset-form">
-      <div class="form-group">
-        <label for="branch">Branch:</label>
-        <select formControlName="branch_id" id="branch" class="form-control" (change)="onBranchChange($event)">
-          <option value="">Select Branch</option>
-          <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
-        </select>
-      </div>
+      <div class="form-row">
+        <div class="form-group form-group-inline">
+          <select formControlName="branch_id" id="branch" class="form-control" (change)="onBranchChange($event)">
+            <option value="">Select Branch</option>
+            <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="group">Group:</label>
-        <select formControlName="group_id" id="group" class="form-control">
-          <option value="">Select Group</option>
-          <option *ngFor="let group of groups" [value]="group.group_id">{{ group.group_name }}</option>
-        </select>
-      </div>
+        <div class="form-group form-group-inline">
+          <select formControlName="group_id" id="group" class="form-control">
+            <option value="">Select Group</option>
+            <option *ngFor="let group of groups" [value]="group.group_id">{{ group.group_name }}</option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="subBranch">Sub Branch:</label>
-        <select formControlName="sub_branch" id="subBranch" class="form-control" [disabled]="!assetForm.get('branch_id')?.value">
-          <option value="">Select Division</option>
-          <option *ngFor="let option of subBranchOptions" [value]="option">{{ option }}</option>
-        </select>
-      </div>
+        <div class="form-group form-group-inline">
+          <select formControlName="sub_branch" id="subBranch" class="form-control" [disabled]="!assetForm.get('branch_id')?.value">
+            <option value="">Select Division</option>
+            <option *ngFor="let option of subBranchOptions" [value]="option">{{ option }}</option>
+          </select>
+        </div>
 
-      <button type="submit" class="submit-button">Load Assets</button>
+        <div class="form-group form-group-inline">
+          <button type="submit" class="submit-button">Load Assets</button>
+        </div>
+
+      </div>
     </form>
   </div>
 
@@ -68,7 +71,7 @@
           <td>{{ asset.serial_number }}</td>
           <td>{{ asset.sub_branch }}</td>
           <td>
-            <button (click)="editAsset(asset.asset_id)">Edit</button>
+            <button (click)="editAsset(asset.asset_id)" class="bg-green-800 py-0 px-2 rounded-md text-white">TAG Entry</button>
           </td>
         </tr>
       </tbody>
@@ -80,82 +83,97 @@
   </div>
 </div>
 
-<!-- Asset Form for Updating -->
-<div *ngIf="isEdit">
-  <h2>Update Asset</h2>
-  <form [formGroup]="assetForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="branch">Branch:</label>
-      <select id="branch" formControlName="branch_id">
-        <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
-      </select>
-    </div>
+<!-- Modal for Editing Asset -->
+<div *ngIf="isEdit" class="fixed inset-0 flex items-center justify-center z-50">
+  <div class="modal-overlay absolute inset-0 bg-gray-900 opacity-50"></div>
+  <div class="modal-content relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+    <h2 class="text-xl font-semibold mb-4">Update Asset</h2>
+    <form [formGroup]="assetForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="branch" class="block text-gray-700">Branch:</label>
+          <select id="branch" formControlName="branch_id" class="form-control mt-1 w-full">
+            <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
+          </select>
+        </div>
+        
 
-    <div class="form-group">
-      <label for="group">Group:</label>
-      <select id="group" formControlName="group_id">
-        <option *ngFor="let group of groups" [value]="group.group_id">{{ group.group_name }}</option>
-      </select>
-    </div>
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="group" class="block text-gray-700">Group:</label>
+          <select id="group" formControlName="group_id" class="form-control mt-1 w-full">
+            <option *ngFor="let group of groups" [value]="group.group_id">{{ group.group_name }}</option>
+          </select>
+        </div>
+        
+      </div>
 
-    <div class="form-group">
-      <label for="sub_branch">Sub Branch:</label>
-      <select id="sub_branch" formControlName="sub_branch">
-        <option *ngFor="let option of subBranchOptions" [value]="option">{{ option }}</option>
-      </select>
-    </div>
+      <div class="form-row">
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="sub_branch" class="block text-gray-700">Sub Branch:</label>
+          <select id="sub_branch" formControlName="sub_branch" class="form-control mt-1 w-full">
+            <option *ngFor="let option of subBranchOptions" [value]="option">{{ option }}</option>
+          </select>
+        </div>
 
-    <div class="form-group">
-      <label for="desktop_name">Desktop Name:</label>
-      <input id="desktop_name" formControlName="desktop_name" type="text">
-    </div>
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="desktop_name" class="block text-gray-700">Desktop Name:</label>
+          <input id="desktop_name" formControlName="desktop_name" type="text" class="form-control mt-1 w-full" readonly>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="configuration">Configuration:</label>
-      <input id="configuration" formControlName="configuration" type="text">
-    </div>
+      <div class="form-row">
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="configuration" class="block text-gray-700">Configuration:</label>
+          <input id="configuration" formControlName="configuration" type="text" class="form-control mt-1 w-full" readonly>
+        </div>
+        
 
-    <div class="form-group">
-      <label for="tag_name">Tag Name:</label>
-      <input id="tag_name" formControlName="tag_name" type="text">
-    </div>
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="tag_name" class="block text-gray-700">Tag Name:</label>
+          <input id="tag_name" formControlName="tag_name" type="text" class="form-control mt-1 w-full" >
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="warranty">Warranty:</label>
-      <input id="warranty" formControlName="warranty" type="date">
-    </div>
+      <div class="form-row">
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="warranty" class="block text-gray-700">Warranty:</label>
+          <input id="warranty" formControlName="warranty" type="date" class="form-control mt-1 w-full" readonly>
+        </div>
 
-    <div class="form-group">
-      <label for="price">Price:</label>
-      <input id="price" formControlName="price" type="number" step="0.01">
-    </div>
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="price" class="block text-gray-700">Price:</label>
+          <input id="price" formControlName="price" type="number" step="0.01" class="form-control mt-1 w-full" readonly>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="purchase_date">Purchase Date:</label>
-      <input id="purchase_date" formControlName="purchase_date" type="date">
-    </div>
+      <div class="form-row">
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="purchase_date" class="block text-gray-700">Purchase Date:</label>
+          <input id="purchase_date" formControlName="purchase_date" type="date" class="form-control mt-1 w-full" readonly>
+        </div>
 
-    <div class="form-group">
-      <label for="status">Status:</label>
-      <input id="status" formControlName="status" type="text">
-    </div>
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="status" class="block text-gray-700">Status:</label>
+          <input id="status" formControlName="status" type="text" class="form-control mt-1 w-full" readonly>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="asset_get_by">Asset Get By:</label>
-      <input id="asset_get_by" formControlName="asset_get_by" type="text">
-    </div>
+      <div class="form-row">
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="asset_get_by" class="block text-gray-700">Asset Get By:</label>
+          <input id="asset_get_by" formControlName="asset_get_by" type="text" class="form-control mt-1 w-full" readonly>
+        </div>
 
-    <div class="form-group">
-      <label for="serial_number">Serial Number:</label>
-      <input id="serial_number" formControlName="serial_number" type="text">
-    </div>
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="serial_number" class="block text-gray-700">Serial Number:</label>
+          <input id="serial_number" formControlName="serial_number" type="text" class="form-control mt-1 w-full" readonly>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="sub_branch">Sub Branch:</label>
-      <input id="sub_branch" formControlName="sub_branch" type="text">
-    </div>
-
-    <button type="submit">Update Asset</button>
-    <button type="button" (click)="resetForm()">Cancel</button>
-  </form>
+      <div class="flex justify-end gap-4">
+        <button type="submit" class="btn-submit">Update Asset</button>
+        <button type="button" (click)="resetForm()" class="btn-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
 </div>
