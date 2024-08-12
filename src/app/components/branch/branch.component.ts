@@ -5,6 +5,7 @@ import { FormBuilder, Validators ,FormGroup} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
 import { UserService } from 'src/app/services/user/user.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-branch',
@@ -15,6 +16,7 @@ export class BranchComponent implements OnInit {
   branches: any[] = [];
   branchForm!: FormGroup;
   totalBranches: number = 0;
+  branchId: string | null = null;
 
   @ViewChild('addBranchDialog')
   addBranchDialog!: TemplateRef<any>;
@@ -24,7 +26,7 @@ export class BranchComponent implements OnInit {
   };
 
 
-  constructor(private branchService: BranchService,private dialog: MatDialog, private fb: FormBuilder , private UserService: UserService) {
+  constructor(private branchService: BranchService,private dialog: MatDialog, private fb: FormBuilder , private UserService: UserService,private route: ActivatedRoute) {
     this.branchForm = this.fb.group({
       branch_name: ['', Validators.required],
       branch_id: [0, Validators.required]
@@ -34,6 +36,7 @@ export class BranchComponent implements OnInit {
   ngOnInit(): void {
     this.loadBranches();
     this.loaduser();
+    this.branchId = this.route.snapshot.paramMap.get('branchID');
   }
 
   loadBranches(): void {
@@ -47,7 +50,7 @@ export class BranchComponent implements OnInit {
   loaduser(){
     this.UserService.getAllUsers().subscribe(data => {
       console.log(data);
-      
+
     })
   }
 

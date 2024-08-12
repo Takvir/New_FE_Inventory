@@ -74,6 +74,8 @@ export class EquipmentComponent implements OnInit {
     this.loadAssets();
     this.loadGroups();
     this.loadBranches();
+
+
   }
 
   loadBranches(): void {
