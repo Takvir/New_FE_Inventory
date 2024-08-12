@@ -4,6 +4,8 @@ import { BranchService } from 'src/app/services/branch/branch.service';
 import { FormBuilder, Validators ,FormGroup} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
+import { UserService } from 'src/app/services/user/user.service';
+
 @Component({
   selector: 'app-branch',
   templateUrl: './branch.component.html',
@@ -22,7 +24,7 @@ export class BranchComponent implements OnInit {
   };
 
 
-  constructor(private branchService: BranchService,private dialog: MatDialog, private fb: FormBuilder) {
+  constructor(private branchService: BranchService,private dialog: MatDialog, private fb: FormBuilder , private UserService: UserService) {
     this.branchForm = this.fb.group({
       branch_name: ['', Validators.required],
       branch_id: [0, Validators.required]
@@ -31,6 +33,7 @@ export class BranchComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBranches();
+    this.loaduser();
   }
 
   loadBranches(): void {
@@ -39,6 +42,13 @@ export class BranchComponent implements OnInit {
       this.totalBranches = this.branches.length;
       console.log(data);
     });
+  }
+
+  loaduser(){
+    this.UserService.getAllUsers().subscribe(data => {
+      console.log(data);
+      
+    })
   }
 
   openAddBranchDialog(): void {
