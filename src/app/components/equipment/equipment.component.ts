@@ -64,7 +64,7 @@ export class EquipmentComponent implements OnInit {
       price: ['', Validators.required],
       purchase_date: ['', Validators.required],
       status: ['', Validators.required],
-      asset_get_by: ['', Validators.required],
+      asset_get_by: ['', Validators.required],  // This will now be a text input
       serial_number: ['', Validators.required],
       sub_branch: ['', Validators.required],
     });
@@ -102,6 +102,7 @@ export class EquipmentComponent implements OnInit {
     }
 
     const asset: Asset = this.assetForm.value;
+    console.log('Form Value:', asset);
 
     if (this.isEdit && this.editAssetId !== null) {
       this.assetService.updateAsset(this.editAssetId, asset).subscribe(() => {

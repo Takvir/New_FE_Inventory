@@ -29,6 +29,7 @@ import { AllReportComponent } from './components/all-report/all-report.component
 import { GroupComponent } from './components/group/group.component';
 import { StockReportComponent } from './components/stock-report/stock-report.component';
 import { TagEntryComponent } from './components/tag-entry/tag-entry.component';
+import { LoginComponent } from './components/login/login.component';
 
 
 
@@ -49,6 +50,8 @@ import { TagEntryComponent } from './components/tag-entry/tag-entry.component';
     GroupComponent,
     StockReportComponent,
     TagEntryComponent,
+    LoginComponent,
+  
 
 
 
