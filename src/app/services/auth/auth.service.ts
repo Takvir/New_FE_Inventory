@@ -1,5 +1,5 @@
 // auth.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
@@ -7,11 +7,17 @@ import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnInit{
   private apiUrl = 'http://localhost:3000/api/auth/login';
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private userTypeSubject = new BehaviorSubject<string | null>(null);
 
+  branchId: string | null = null;
+
+
+  ngOnInit(): void {
+    this.branchId = localStorage.getItem('branch_id');
+  }
   constructor(private http: HttpClient, private router: Router) {}
 
   // Get token observable
@@ -26,15 +32,43 @@ export class AuthService {
 
   // Log in a user
  // auth.service.ts
+// login(username: string, password: string): Observable<any> {
+//   return this.http.post<any>(this.apiUrl, { username, password })
+//     .pipe(
+//       tap(response => {
+//         if (response.token) {
+//           this.tokenSubject.next(response.token);
+//           this.userTypeSubject.next(response.user_type);
+//           localStorage.setItem('token', response.token);
+//           this.router.navigate(['/equipment']);
+//         } else {
+//           this.tokenSubject.next(null);
+//           this.userTypeSubject.next(null);
+//         }
+//       }),
+//       catchError(error => {
+//         console.error('Login error:', error); // Log the error
+//         this.tokenSubject.next(null);
+//         this.userTypeSubject.next(null);
+//         return throwError(error);
+//       })
+//     );
+// }
+
+// auth.service.ts
+// auth.service.ts
+// auth.service.ts
 login(username: string, password: string): Observable<any> {
   return this.http.post<any>(this.apiUrl, { username, password })
     .pipe(
       tap(response => {
+        console.log('Login response:', response); // Debug logging
         if (response.token) {
           this.tokenSubject.next(response.token);
           this.userTypeSubject.next(response.user_type);
           localStorage.setItem('token', response.token);
-          this.router.navigate(['/equipment']);
+          localStorage.setItem('user_type', response.user_type);
+          localStorage.setItem('branch_id', response.branch_id); // Store branch ID
         } else {
           this.tokenSubject.next(null);
           this.userTypeSubject.next(null);
@@ -48,6 +82,8 @@ login(username: string, password: string): Observable<any> {
       })
     );
 }
+
+
 
   // Log out a user
   logout(): void {

@@ -14,10 +14,15 @@ export class AppComponent {
   navOpen = false;
 
   isLoginPage = false;
+  branchId: string | null = null;
 
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+    this.branchId = localStorage.getItem('branch_id');
+    console.log(this.branchId);
+
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.isLoginPage = event.urlAfterRedirects === '/sign-in';
@@ -36,5 +41,5 @@ export class AppComponent {
   signOut(){
     this.router.navigate(['/sign-in']);
   }
-  
+
 }

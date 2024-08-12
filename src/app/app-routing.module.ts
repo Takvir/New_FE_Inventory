@@ -14,7 +14,6 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './auth.guard';
 
 
-
 const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
   { path: 'sign-in', component: LoginComponent },
