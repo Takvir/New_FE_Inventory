@@ -46,6 +46,7 @@ export class AssetBranchComponent implements OnInit {
   assetForm!: FormGroup;
   subBranchOptions: string[] = [];
   noDataFound: boolean = false;
+  isBranchUser: boolean = false;
 
   constructor(
     private assetService: SectionService,
@@ -56,18 +57,38 @@ export class AssetBranchComponent implements OnInit {
 
   ngOnInit(): void {
     this.assetForm = this.fb.group({
-      branchId: ['', Validators.required],
+      branchId: [''],
       groupId: ['', Validators.required],
       subBranch: [{ value: '', disabled: true }]
     });
 
     this.loadBranches();
     this.loadGroups();
+
+    // Check user type
+    const userType = localStorage.getItem('user_type');
+    if (userType === 'branch') {
+      this.isBranchUser = true;
+      this.assetForm.get('branchId')?.setValidators(Validators.required);
+      this.assetForm.get('branchId')?.updateValueAndValidity();
+    }
   }
 
   loadBranches(): void {
     this.branchService.getBranches().subscribe((data: Branch[]) => {
-      this.branches = data;
+      const userType = localStorage.getItem('user_type');
+
+      if (userType === 'superadmin') {
+        this.branches = data;
+      } else {
+        const branchId = localStorage.getItem('branch_id');
+        if (branchId) {
+          const branchIdNum = parseInt(branchId, 10);
+          this.branches = data.filter(branch => branch.branch_id === branchIdNum);
+        } else {
+          this.branches = []; // Or any default behavior if no branch ID is set
+        }
+      }
     });
   }
 
@@ -99,11 +120,12 @@ export class AssetBranchComponent implements OnInit {
       this.assetForm.patchValue({ subBranch: 'Select Division' });
     }
   }
+
   loadAssets(): void {
     const { branchId, groupId, subBranch } = this.assetForm.value;
     this.noDataFound = false;
 
-      if (branchId && groupId && subBranch && subBranch !== 'Select Division') {
+    if (branchId && groupId && subBranch && subBranch !== 'Select Division') {
       this.assetService.getAssetsByBranchGroupAndSubBranch(branchId, groupId, subBranch).subscribe({
         next: (data: Asset[]) => {
           this.assets = data;
@@ -114,8 +136,7 @@ export class AssetBranchComponent implements OnInit {
           this.noDataFound = true;
         }
       });
-    }
-    else if (branchId && subBranch && subBranch !== 'Select Division') {
+    } else if (branchId && subBranch && subBranch !== 'Select Division') {
       this.assetService.getAssetsByBranchAndSubBranch(branchId, subBranch).subscribe({
         next: (data: Asset[]) => {
           this.assets = data;
@@ -126,8 +147,7 @@ export class AssetBranchComponent implements OnInit {
           this.noDataFound = true;
         }
       });
-    }
-    else if (branchId && groupId) {
+    } else if (branchId && groupId) {
       this.assetService.getAssetsByBranchAndGroup(branchId, groupId).subscribe({
         next: (data: Asset[]) => {
           this.assets = data;
@@ -162,6 +182,4 @@ export class AssetBranchComponent implements OnInit {
       });
     }
   }
-
-
 }

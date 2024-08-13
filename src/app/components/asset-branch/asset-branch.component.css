@@ -59,13 +59,20 @@
   font-size: 14px; /* Adjusted font size to match form controls */
   cursor: pointer;
   transition: background-color 0.3s ease;
-  /* Align with form controls */
   align-self: flex-start; /* Adjust alignment if needed */
 }
 
 /* Submit button hover effect */
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #025c40; /* Slightly darker shade on hover */
+}
+
+/* Disabled submit button */
+.submit-button:disabled {
+  background-color: #b3b3b3; /* Gray color for disabled state */
+  color: #666; /* Darker gray for text */
+  cursor: not-allowed; /* Change cursor to indicate disabled state */
+  transition: none; /* Remove transition effect for disabled state */
 }
 
 /* Table styling */

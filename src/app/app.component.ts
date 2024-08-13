@@ -1,27 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   title = 'inventory_fe';
 
   reportOpen = false;
   navOpen = false;
 
   isLoginPage = false;
+  userType: string | null = null;
   branchId: string | null = null;
 
   constructor(private router: Router) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    // Initialize userType and branchId from local storage
+    
+   
+    this.userType = localStorage.getItem('user_type');
     this.branchId = localStorage.getItem('branch_id');
-    console.log(this.branchId);
 
+    // Check the current route to determine if it's the login page
+   
+
+ 
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -38,8 +45,8 @@ export class AppComponent {
     this.reportOpen = !this.reportOpen;
   }
 
-  signOut(){
+  signOut() {
+    localStorage.clear(); // Clear local storage on sign out
     this.router.navigate(['/sign-in']);
   }
-
 }

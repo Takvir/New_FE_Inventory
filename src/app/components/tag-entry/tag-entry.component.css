@@ -31,18 +31,30 @@
 }
 
 .submit-button {
-  background-color: #065208;
-  color: white;
-  padding: 8px 20px;
+  padding: 8px 12px; /* Adjusted padding for smaller height */
   border: none;
   border-radius: 4px;
+  background-color: #02724b;
+  color: #fff;
+  font-size: 14px; /* Adjusted font size to match form controls */
   cursor: pointer;
-  font-weight: 500;
+  transition: background-color 0.3s ease;
+  align-self: flex-start; /* Adjust alignment if needed */
 }
 
+/* Submit button hover effect */
 .submit-button:hover {
-  background-color: #118a17;
+  background-color: #025c40; /* Slightly darker shade on hover */
 }
+
+/* Disabled submit button */
+.submit-button:disabled {
+  background-color: #b3b3b3; /* Gray color for disabled state */
+  color: #666; /* Darker gray for text */
+  cursor: not-allowed; /* Change cursor to indicate disabled state */
+  transition: none; /* Remove transition effect for disabled state */
+}
+
 
 .asset-table {
   width: 100%;

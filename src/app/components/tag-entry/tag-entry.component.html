@@ -3,7 +3,7 @@
   <div class="form-container">
     <h2>Select Branch, Group, and Sub Branch to View Assets</h2>
 
-    <form [formGroup]="assetForm" (ngSubmit)="loadAssets()" class="asset-form">
+    <form [formGroup]="viewAssetsForm" (ngSubmit)="loadAssets()" class="asset-form">
       <div class="form-row">
         <div class="form-group form-group-inline">
           <select formControlName="branch_id" id="branch" class="form-control" (change)="onBranchChange($event)">
@@ -20,14 +20,20 @@
         </div>
 
         <div class="form-group form-group-inline">
-          <select formControlName="sub_branch" id="subBranch" class="form-control" [disabled]="!assetForm.get('branch_id')?.value">
+          <select formControlName="sub_branch" id="subBranch" class="form-control" [disabled]="!viewAssetsForm.get('branch_id')?.value">
             <option value="">Select Division</option>
             <option *ngFor="let option of subBranchOptions" [value]="option">{{ option }}</option>
           </select>
         </div>
 
         <div class="form-group form-group-inline">
-          <button type="submit" class="submit-button">Load Assets</button>
+          <button
+          type="submit"
+          class="submit-button"
+  
+          [disabled]="isBranchUser && !viewAssetsForm.get('branch_id')?.value">
+          Load Assets
+        </button>
         </div>
 
       </div>
@@ -88,16 +94,15 @@
   <div class="modal-overlay absolute inset-0 bg-gray-900 opacity-50"></div>
   <div class="modal-content relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
     <h2 class="text-xl font-semibold mb-4">Update Asset</h2>
-    <form [formGroup]="assetForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="editAssetForm" (ngSubmit)="onSubmit()">
       <div class="form-row">
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
           <label for="branch" class="block text-gray-700">Branch:</label>
-          <select id="branch" formControlName="branch_id" class="form-control mt-1 w-full">
+          <select id="branch" formControlName="branch_id" class="form-control mt-1 w-full" (change)="onBranchChange($event)">
             <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
           </select>
         </div>
         
-
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
           <label for="group" class="block text-gray-700">Group:</label>
           <select id="group" formControlName="group_id" class="form-control mt-1 w-full">
@@ -123,11 +128,10 @@
 
       <div class="form-row">
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
-          <label for="configuration" class="block text-gray-700">Configuration:</label>
+          <label for="configuration" class="block text-gray-700">Model Name / Configuration::</label>
           <input id="configuration" formControlName="configuration" type="text" class="form-control mt-1 w-full" readonly>
         </div>
         
-
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
           <label for="tag_name" class="block text-gray-700">Tag Name:</label>
           <input id="tag_name" formControlName="tag_name" type="text" class="form-control mt-1 w-full" >

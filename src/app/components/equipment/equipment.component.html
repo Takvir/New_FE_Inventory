@@ -1,6 +1,5 @@
 <div class="asset-container">
-  <!-- <h1 class="form-heading">{{ isEdit ? 'Edit Asset' : 'Add Asset' }}</h1> -->
-  <h1 class="branch-heading">Add Asset</h1>
+  <h1 class="branch-heading">New Asset Add</h1>
 
   <form [formGroup]="assetForm" (ngSubmit)="onSubmit()" style="margin-top:40px">
     <div class="form-row">
@@ -16,6 +15,7 @@
         <input id="branch_name" formControlName="branch_name" class="form-control" readonly>
       </div>
     </div>
+
     <div class="form-row">
       <div class="form-group">
         <label for="sub_branch">Sub Branch:</label>
@@ -25,7 +25,7 @@
       </div>
 
       <div class="form-group">
-
+        <!-- Empty div for alignment or future use -->
       </div>
     </div>
 
@@ -38,30 +38,24 @@
       </div>
 
       <div class="form-group">
-        <label for="desktop_name">Device Name</label>
+        <label for="desktop_name">Device Name:</label>
         <input id="desktop_name" formControlName="desktop_name" class="form-control">
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="configuration">Configuration:</label>
+        <label for="configuration">Model Name / Configuration:</label>
         <input id="configuration" formControlName="configuration" class="form-control">
       </div>
 
       <div class="form-group">
         <label for="tag_name">Tag Name:</label>
         <select id="tag_name" formControlName="tag_name" class="form-control">
-          <option value="Will Be Done">Will Be Done</option>
-
+          <option value="Will Be Done">Routed To FAD</option>
         </select>
       </div>
     </div>
-
-    
-
-    
-  
 
     <div class="form-row">
       <div class="form-group">
@@ -103,8 +97,9 @@
       </div>
     </div>
 
-
-
-    <button type="submit" class="submit-button">{{ isEdit ? 'Update Asset' : 'Add Asset' }}</button>
+    <!-- Submit Button -->
+    <button type="submit" class="submit-button" [ngClass]="{'disabled-button': assetForm.invalid}">
+      {{ isEdit ? 'Update Asset' : 'Add Asset' }}
+    </button>
   </form>
 </div>

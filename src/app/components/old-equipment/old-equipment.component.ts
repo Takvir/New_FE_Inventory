@@ -4,6 +4,8 @@ import { BranchService } from 'src/app/services/branch/branch.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GroupService } from 'src/app/services/group/group.service';
 
+
+
 interface Asset {
   id: number;
   branch_id: number;
@@ -32,12 +34,15 @@ export interface Group {
   group_name: string;
   branch_id: number;
 }
+
+
 @Component({
-  selector: 'app-equipment',
-  templateUrl: './equipment.component.html',
-  styleUrls: ['./equipment.component.css']
+  selector: 'app-old-equipment',
+  templateUrl: './old-equipment.component.html',
+  styleUrls: ['./old-equipment.component.css']
 })
-export class EquipmentComponent implements OnInit {
+export class OldEquipmentComponent implements OnInit {
+
   assets: Asset[] = [];
   assetForm!: FormGroup;
   isEdit: boolean = false;
@@ -45,7 +50,7 @@ export class EquipmentComponent implements OnInit {
   branches: Branch[] = [];
   groups: Group[] = [];
   subBranchOptions: string[] = [];
-
+  
   constructor(
     private assetService: SectionService,
     private branchService: BranchService,
@@ -76,12 +81,7 @@ export class EquipmentComponent implements OnInit {
     this.setBranchFromLocalStorage();
   }
 
-  // loadBranches(): void {
-  //   this.branchService.getBranches().subscribe((data: Branch[]) => {
-  //     this.branches = data;
-  //     console.log(this.branches);
-  //   });
-  // }
+
 
   loadGroups(): void {
     this.groupService.getGroups().subscribe((data: Group[]) => {
@@ -197,5 +197,6 @@ export class EquipmentComponent implements OnInit {
       }
     });
   }
+
 
 }

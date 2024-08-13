@@ -40,14 +40,16 @@ export interface Group {
 })
 export class TagEntryComponent implements OnInit {
   assets: Asset[] = [];
-  assetForm!: FormGroup;
+  viewAssetsForm!: FormGroup;  // For viewing assets
+  editAssetForm!: FormGroup;   // For editing asset
   isEdit: boolean = false;
   editAssetId: number | null = null;
   branches: Branch[] = [];
   groups: Group[] = [];
   subBranchOptions: string[] = [];
   noDataFound: boolean = false;
-  disableMessage = true;
+
+  isBranchUser: boolean = false;
 
   constructor(
     private tagService: TagAssetService,
@@ -55,7 +57,13 @@ export class TagEntryComponent implements OnInit {
     private groupService: GroupService,
     private fb: FormBuilder
   ) {
-    this.assetForm = this.fb.group({
+    this.viewAssetsForm = this.fb.group({
+      branch_id: ['', Validators.required],
+      group_id: ['', Validators.required],
+      sub_branch: ['']
+    });
+
+    this.editAssetForm = this.fb.group({
       branch_id: ['', Validators.required],
       group_id: ['', Validators.required],
       desktop_name: ['', Validators.required],
@@ -76,14 +84,30 @@ export class TagEntryComponent implements OnInit {
   ngOnInit(): void {
     this.loadBranches();
     this.loadGroups();
-   
-   
-    
+
+    const userType = localStorage.getItem('user_type');
+    if (userType === 'branch') {
+      this.isBranchUser = true;
+      this.viewAssetsForm.get('branch_id')?.setValidators(Validators.required);
+      this.viewAssetsForm.get('branch_id')?.updateValueAndValidity();
+    }
   }
 
   loadBranches(): void {
     this.branchService.getBranches().subscribe((data: Branch[]) => {
-      this.branches = data;
+      const userType = localStorage.getItem('user_type');
+
+      if (userType === 'superadmin') {
+        this.branches = data;
+      } else {
+        const branchId = localStorage.getItem('branch_id');
+        if (branchId) {
+          const branchIdNum = parseInt(branchId, 10);
+          this.branches = data.filter(branch => branch.branch_id === branchIdNum);
+        } else {
+          this.branches = []; // Or any default behavior if no branch ID is set
+        }
+      }
     });
   }
 
@@ -108,16 +132,16 @@ export class TagEntryComponent implements OnInit {
         'ADC',
         'Card Division'
       ];
-      this.assetForm.get('subBranch')?.enable();
+      this.viewAssetsForm.get('sub_branch')?.enable();
     } else {
       this.subBranchOptions = ['Select Division'];
-      this.assetForm.get('subBranch')?.disable();
-      this.assetForm.patchValue({ subBranch: 'Select Division' });
+      this.viewAssetsForm.get('sub_branch')?.disable();
+      this.viewAssetsForm.patchValue({ sub_branch: 'Select Division' });
     }
   }
 
   loadAssets(): void {
-    const { branch_id, group_id, sub_branch } = this.assetForm.value;
+    const { branch_id, group_id, sub_branch } = this.viewAssetsForm.value;
     this.noDataFound = false;
 
     if (branch_id && group_id && sub_branch && sub_branch !== 'Select Division') {
@@ -182,7 +206,7 @@ export class TagEntryComponent implements OnInit {
     this.isEdit = true;
     this.editAssetId = assetId;
     this.tagService.getAssetById(assetId).subscribe(asset => {
-      this.assetForm.patchValue({
+      this.editAssetForm.patchValue({
         ...asset,
         branch_id: asset.branch_id,
         group_id: asset.group_id
@@ -191,9 +215,9 @@ export class TagEntryComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.assetForm.valid) {
+    if (this.editAssetForm.valid) {
       if (this.isEdit && this.editAssetId) {
-        this.tagService.updateAsset(this.editAssetId, this.assetForm.value).subscribe(() => {
+        this.tagService.updateAsset(this.editAssetId, this.editAssetForm.value).subscribe(() => {
           this.loadAssets();
           this.resetForm();
         });
@@ -202,7 +226,7 @@ export class TagEntryComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.assetForm.reset();
+    this.editAssetForm.reset();
     this.isEdit = false;
     this.editAssetId = null;
   }

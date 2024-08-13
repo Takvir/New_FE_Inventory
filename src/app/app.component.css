@@ -2,10 +2,12 @@
 
 body {
     font-family: 'Roboto', sans-serif;
+    
+    
   }
   
   header {
-    background-color: #ffffffe8;
+    background-color: #17924ae8;
     color: rgb(0, 0, 0);
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   }
@@ -19,7 +21,10 @@ body {
   }
   
   nav{
-    font-family: Georgia, serif;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-variant: small-caps;
+    letter-spacing: 0.5px;
+    
   }
   
   header nav ul {
@@ -29,7 +34,7 @@ body {
   }
   
   header nav ul li a {
-    color: rgb(0, 0, 0);
+    
     text-decoration: none;
     padding: 10px 15px;
     transition: background-color 0.3s;
@@ -67,9 +72,7 @@ body {
     flex-direction: column;
   }
   
-  .p-4 {
-    padding: 1rem;
-  }
+
   
   .text-center {
     text-align: center;
@@ -103,9 +106,7 @@ body {
     background-color: #f7fafc;
   }
   
-  .p-6 {
-    padding: 1.5rem;
-  }
+
   
   .bg-cyan-700 {
     background-color: #034536;
@@ -115,4 +116,8 @@ body {
   
   .sing-out{
     cursor: pointer;
+    color: white;
+    background-color: #09035a;
+    border-radius: 10%;
+    padding: 0 8px;
   }

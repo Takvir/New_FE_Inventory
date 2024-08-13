@@ -12,6 +12,7 @@ import { StockReportComponent } from './components/stock-report/stock-report.com
 import { TagEntryComponent } from './components/tag-entry/tag-entry.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './auth.guard';
+import { OldEquipmentComponent } from './components/old-equipment/old-equipment.component';
 
 
 const routes: Routes = [
@@ -24,7 +25,9 @@ const routes: Routes = [
   { path: 'summary', component: AllReportComponent, canActivate: [AuthGuard] },
   { path: 'group-add', component: GroupComponent, canActivate: [AuthGuard] },
   { path: 'stock-report', component: StockReportComponent, canActivate: [AuthGuard] },
-  { path: 'tag-entry', component: TagEntryComponent, canActivate: [AuthGuard] }
+  { path: 'tag-entry', component: TagEntryComponent, canActivate: [AuthGuard] },
+  { path: 'old-entry', component: OldEquipmentComponent, canActivate: [AuthGuard] },
+  
 ];
 
 @NgModule({
