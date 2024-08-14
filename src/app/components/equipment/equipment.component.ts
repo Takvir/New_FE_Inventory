@@ -115,22 +115,25 @@ export class EquipmentComponent implements OnInit {
     if (this.assetForm.invalid) {
       return;
     }
-
+  
     const asset: Asset = this.assetForm.value;
     console.log('Form Value:', asset);
-
+  
     if (this.isEdit && this.editAssetId !== null) {
       this.assetService.updateAsset(this.editAssetId, asset).subscribe(() => {
         this.loadAssets();
         this.resetForm();
+        window.confirm('Asset updated successfully!'); // Success message
       });
     } else {
       this.assetService.addAsset(asset).subscribe(() => {
         this.loadAssets();
         this.resetForm();
+        window.confirm('Asset added successfully!'); // Success message
       });
     }
   }
+  
 
   onEdit(asset: Asset): void {
     this.isEdit = true;

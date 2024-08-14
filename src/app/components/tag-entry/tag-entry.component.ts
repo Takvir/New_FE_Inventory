@@ -48,6 +48,10 @@ export class TagEntryComponent implements OnInit {
   groups: Group[] = [];
   subBranchOptions: string[] = [];
   noDataFound: boolean = false;
+  isBranchDisabled = true;
+  isSubBranchDisabled = true;
+  isGroupDisabled = true;
+  
 
   isBranchUser: boolean = false;
 
@@ -60,7 +64,8 @@ export class TagEntryComponent implements OnInit {
     this.viewAssetsForm = this.fb.group({
       branch_id: ['', Validators.required],
       group_id: ['', Validators.required],
-      sub_branch: ['']
+      sub_branch: [{ value: '', disabled: this.isSubBranchDisabled }]
+      
     });
 
     this.editAssetForm = this.fb.group({
@@ -79,6 +84,8 @@ export class TagEntryComponent implements OnInit {
       group_name: ['', Validators.required],
       branch_name: ['', Validators.required],
     });
+
+
   }
 
   ngOnInit(): void {
@@ -91,6 +98,12 @@ export class TagEntryComponent implements OnInit {
       this.viewAssetsForm.get('branch_id')?.setValidators(Validators.required);
       this.viewAssetsForm.get('branch_id')?.updateValueAndValidity();
     }
+
+    // this.editAssetForm.get('branch_id')?.disable();
+    // this.editAssetForm.get('group_id')?.disable();
+    // this.editAssetForm.get('sub_branch')?.disable();
+
+    this.isBranchDisabled = true;
   }
 
   loadBranches(): void {
@@ -119,6 +132,7 @@ export class TagEntryComponent implements OnInit {
 
   onBranchChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
+    
     const selectedBranchId = parseInt(selectElement.value, 10);
     const selectedBranch = this.branches.find(branch => branch.branch_id === selectedBranchId);
 
@@ -212,6 +226,9 @@ export class TagEntryComponent implements OnInit {
         group_id: asset.group_id
       });
     });
+
+    
+
   }
 
   onSubmit(): void {
@@ -220,8 +237,11 @@ export class TagEntryComponent implements OnInit {
         this.tagService.updateAsset(this.editAssetId, this.editAssetForm.value).subscribe(() => {
           this.loadAssets();
           this.resetForm();
+          window.confirm('FAD added successfully!');
+         
         });
       }
+
     }
   }
 
@@ -230,4 +250,10 @@ export class TagEntryComponent implements OnInit {
     this.isEdit = false;
     this.editAssetId = null;
   }
+
+  isFAD(tagName: string): boolean {
+    return tagName === 'Routed To FAD';
+  }
+  
 }
+

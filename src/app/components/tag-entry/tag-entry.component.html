@@ -45,37 +45,42 @@
     <table class="asset-table">
       <thead>
         <tr>
-          <th>ID</th>
+          <!-- <th>ID</th> -->
           <th>Branch</th>
+          <th>Sub Branch</th>
           <th>Group</th>
-          <th>Desktop Name</th>
+          <th>Device Name</th>
           <th>Configuration</th>
+          <th>Serial Number</th>
           <th>Tag Name</th>
           <th>Warranty</th>
           <th>Price</th>
           <th>Purchase Date</th>
           <th>Status</th>
-          <th>Asset Get By</th>
-          <th>Serial Number</th>
-          <th>Sub Branch</th>
+          <!-- <th>Asset Get By</th> -->
+          
+    
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let asset of assets">
-          <td>{{ asset.asset_id }}</td>
+          <!-- <td>{{ asset.asset_id }}</td> -->
           <td>{{ asset.branch_name }}</td>
+          <td>{{ asset.sub_branch }}</td>
           <td>{{ asset.group_name }}</td>
           <td>{{ asset.desktop_name }}</td>
           <td>{{ asset.configuration }}</td>
-          <td>{{ asset.tag_name }}</td>
+          <td>{{ asset.serial_number }}</td>
+          <td [ngClass]="{'text-red-500': isFAD(asset.tag_name)}">{{ asset.tag_name }}</td>
+
           <td>{{ asset.warranty | date }}</td>
           <td>{{ asset.price }}</td>
           <td>{{ asset.purchase_date | date }}</td>
           <td>{{ asset.status }}</td>
-          <td>{{ asset.asset_get_by }}</td>
-          <td>{{ asset.serial_number }}</td>
-          <td>{{ asset.sub_branch }}</td>
+          <!-- <td>{{ asset.asset_get_by }}</td> -->
+          
+      
           <td>
             <button (click)="editAsset(asset.asset_id)" class="bg-green-800 py-0 px-2 rounded-md text-white">TAG Entry</button>
           </td>
@@ -98,14 +103,14 @@
       <div class="form-row">
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
           <label for="branch" class="block text-gray-700">Branch:</label>
-          <select id="branch" formControlName="branch_id" class="form-control mt-1 w-full" (change)="onBranchChange($event)">
+          <select id="branch" formControlName="branch_id" class="form-control mt-1 w-full" (change)="onBranchChange($event)" [attr.disabled]="isBranchDisabled ? true : null">
             <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
           </select>
         </div>
         
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
           <label for="group" class="block text-gray-700">Group:</label>
-          <select id="group" formControlName="group_id" class="form-control mt-1 w-full">
+          <select id="group" formControlName="group_id" class="form-control mt-1 w-full" [attr.disabled]="isGroupDisabled ? true : null">
             <option *ngFor="let group of groups" [value]="group.group_id">{{ group.group_name }}</option>
           </select>
         </div>
@@ -115,7 +120,7 @@
       <div class="form-row">
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
           <label for="sub_branch" class="block text-gray-700">Sub Branch:</label>
-          <select id="sub_branch" formControlName="sub_branch" class="form-control mt-1 w-full">
+          <select id="sub_branch" formControlName="sub_branch" class="form-control mt-1 w-full" [attr.disabled]="isSubBranchDisabled ? true : null">
             <option *ngFor="let option of subBranchOptions" [value]="option">{{ option }}</option>
           </select>
         </div>
