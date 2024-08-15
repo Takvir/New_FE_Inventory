@@ -3,7 +3,7 @@ import { SectionService } from 'src/app/services/section/section.service';
 import { BranchService } from 'src/app/services/branch/branch.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GroupService } from 'src/app/services/group/group.service';
-
+import { HttpClient } from '@angular/common/http';
 
 
 interface Asset {
@@ -50,12 +50,15 @@ export class OldEquipmentComponent implements OnInit {
   branches: Branch[] = [];
   groups: Group[] = [];
   subBranchOptions: string[] = [];
+  selectedFile: File | null = null;
+  uploadForm!: FormGroup;
   
   constructor(
     private assetService: SectionService,
     private branchService: BranchService,
     private groupService: GroupService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private http: HttpClient,
   ) {
     this.assetForm = this.fb.group({
       branch_id: ['', Validators.required],
@@ -68,9 +71,13 @@ export class OldEquipmentComponent implements OnInit {
       price: ['', Validators.required],
       purchase_date: ['', Validators.required],
       status: ['', Validators.required],
-      asset_get_by: ['', Validators.required],  // This will now be a text input
+      asset_get_by: ['', Validators.required],  
       serial_number: ['', Validators.required],
       sub_branch: ['', Validators.required],
+    });
+
+    this.uploadForm = this.fb.group({
+      file: [null]
     });
   }
 
@@ -82,7 +89,38 @@ export class OldEquipmentComponent implements OnInit {
   }
 
 
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.uploadForm.patchValue({
+        file: file
+      });
+    }
+  }
+  
 
+  uploadFile() {
+    if (!this.selectedFile) {
+      console.error('No file selected.');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+  
+    this.http.post('http://localhost:3000/api/assets/upload', formData)
+      .subscribe({
+        next: response => {
+          console.log('Upload successful', response);
+        },
+        error: error => {
+          console.error('Error uploading file', error);
+        }
+      });
+  }
+  
+  
   loadGroups(): void {
     this.groupService.getGroups().subscribe((data: Group[]) => {
       this.groups = data;

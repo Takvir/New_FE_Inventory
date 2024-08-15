@@ -61,7 +61,7 @@ interface UpdateAsset {
   providedIn: 'root'
 })
 export class SectionService {
-  private apiUrl = 'http://11.11.7.41:3000/api/assets';
+  private apiUrl = 'http://localhost:3000/api/assets';
 
   constructor(private http: HttpClient) { }
 
@@ -104,4 +104,5 @@ export class SectionService {
   getAssetsByBranchAndSubBranch(branchId: number, subBranch: string): Observable<Asset2[]> {
     return this.http.get<Asset2[]>(`${this.apiUrl}/branch/${branchId}/sub_branch/${subBranch}`);
   }
+
 }
