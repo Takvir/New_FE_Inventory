@@ -84,6 +84,7 @@
         </li>
       </ul>
     </nav>
+
   </div>
 
   <!-- Main Content Area -->
@@ -99,12 +100,12 @@
       </div>
       <nav [ngClass]="{'hidden': !navOpen, 'block': navOpen}" class="w-full md:flex md:items-center md:w-auto">
         <ul class="flex flex-col md:flex-row md:space-x-4 mt-4 md:mt-0">
-          <li><a class="block py-2 px-4 text-3xl">Welcome To ICT Inventory Management</a></li>
+          <li class="text-center"><a class="block py-2 px-4 text-3xl font-serif text-center">Welcome To ICT Inventory Management</a></li>
         </ul>
       </nav>
       <nav [ngClass]="{'hidden': !navOpen, 'block': navOpen}" class="w-full md:flex md:items-center md:w-auto">
         <ul class="flex flex-col md:flex-row md:space-x-4 mt-4 md:mt-0 sing-out">
-          <li><a (click)="signOut()" class="block  px-4  rounded-md text-white sing-out">Sign Out</a></li>
+          <li><a (click)="signOut()" style=" box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;" class="block  px-4  rounded-md text-white sing-out">Sign Out <i class="fa fa-sign-out" style="font-size:15px"></i></a></li>
         </ul>
       </nav>
     </header>
