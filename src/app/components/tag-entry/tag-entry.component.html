@@ -1,7 +1,7 @@
 <!-- Asset Form for Viewing Assets -->
 <div>
   <div class="form-container">
-    <h2>Select Branch, Group, and Sub Branch to View Assets</h2>
+    <h4 class="text-center text-gray-600  ">FAD TAG ENTRY</h4>
 
     <form [formGroup]="viewAssetsForm" (ngSubmit)="loadAssets()" class="asset-form">
       <div class="form-row">
@@ -30,7 +30,7 @@
           <button
           type="submit"
           class="submit-button"
-  
+
           [disabled]="isBranchUser && !viewAssetsForm.get('branch_id')?.value">
           Load Assets
         </button>
@@ -41,7 +41,7 @@
   </div>
 
   <div *ngIf="assets.length > 0">
-    <h3>Assets</h3>
+
     <table class="asset-table">
       <thead>
         <tr>
@@ -57,9 +57,10 @@
           <th>Price</th>
           <th>Purchase Date</th>
           <th>Status</th>
+          <th>Asset Value</th>
           <!-- <th>Asset Get By</th> -->
-          
-    
+
+
           <th>Actions</th>
         </tr>
       </thead>
@@ -78,9 +79,10 @@
           <td>{{ asset.price }}</td>
           <td>{{ asset.purchase_date | date }}</td>
           <td>{{ asset.status }}</td>
+          <td>{{ calculateAssetValue(asset.purchase_date, asset.price) }}</td>
           <!-- <td>{{ asset.asset_get_by }}</td> -->
-          
-      
+
+
           <td>
             <button (click)="editAsset(asset.asset_id)" class="bg-green-800 py-0 px-2 rounded-md text-white">TAG Entry</button>
           </td>
@@ -98,8 +100,15 @@
 <div *ngIf="isEdit" class="fixed inset-0 flex items-center justify-center z-50">
   <div class="modal-overlay absolute inset-0 bg-gray-900 opacity-50"></div>
   <div class="modal-content relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-    <h2 class="text-xl font-semibold mb-4">Update Asset</h2>
+    <h2 class="text-xl font-semibold mb-4">TAG ENTRY</h2>
     <form [formGroup]="editAssetForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-row">
+        <div class="form-group mb-4 w-full sm:w-1/2 px-2">
+          <label for="tag_name" class="block text-red-700">Tag Name:</label>
+          <input id="tag_name" formControlName="tag_name" type="text" class="form-control mt-1 w-full" >
+        </div>
+      </div>
       <div class="form-row">
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
           <label for="branch" class="block text-gray-700">Branch:</label>
@@ -107,14 +116,14 @@
             <option *ngFor="let branch of branches" [value]="branch.branch_id">{{ branch.branch_name }}</option>
           </select>
         </div>
-        
+
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
           <label for="group" class="block text-gray-700">Group:</label>
           <select id="group" formControlName="group_id" class="form-control mt-1 w-full" [attr.disabled]="isGroupDisabled ? true : null">
             <option *ngFor="let group of groups" [value]="group.group_id">{{ group.group_name }}</option>
           </select>
         </div>
-        
+
       </div>
 
       <div class="form-row">
@@ -136,10 +145,9 @@
           <label for="configuration" class="block text-gray-700">Model Name / Configuration::</label>
           <input id="configuration" formControlName="configuration" type="text" class="form-control mt-1 w-full" readonly>
         </div>
-        
+
         <div class="form-group mb-4 w-full sm:w-1/2 px-2">
-          <label for="tag_name" class="block text-gray-700">Tag Name:</label>
-          <input id="tag_name" formControlName="tag_name" type="text" class="form-control mt-1 w-full" >
+
         </div>
       </div>
 

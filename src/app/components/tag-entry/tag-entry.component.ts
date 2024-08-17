@@ -51,7 +51,7 @@ export class TagEntryComponent implements OnInit {
   isBranchDisabled = true;
   isSubBranchDisabled = true;
   isGroupDisabled = true;
-  
+
 
   isBranchUser: boolean = false;
 
@@ -65,7 +65,7 @@ export class TagEntryComponent implements OnInit {
       branch_id: ['', Validators.required],
       group_id: ['', Validators.required],
       sub_branch: [{ value: '', disabled: this.isSubBranchDisabled }]
-      
+
     });
 
     this.editAssetForm = this.fb.group({
@@ -116,7 +116,7 @@ export class TagEntryComponent implements OnInit {
         const branchId = localStorage.getItem('branch_id');
         if (branchId) {
           const branchIdNum = parseInt(branchId, 10);
-          this.branches = data.filter(branch => branch.branch_id === branchIdNum);
+          this.branches = data.filter(branch => branch.branch_id === branchIdNum );
         } else {
           this.branches = []; // Or any default behavior if no branch ID is set
         }
@@ -132,7 +132,7 @@ export class TagEntryComponent implements OnInit {
 
   onBranchChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
-    
+
     const selectedBranchId = parseInt(selectElement.value, 10);
     const selectedBranch = this.branches.find(branch => branch.branch_id === selectedBranchId);
 
@@ -227,7 +227,7 @@ export class TagEntryComponent implements OnInit {
       });
     });
 
-    
+
 
   }
 
@@ -238,7 +238,7 @@ export class TagEntryComponent implements OnInit {
           this.loadAssets();
           this.resetForm();
           window.confirm('FAD added successfully!');
-         
+
         });
       }
 
@@ -254,6 +254,26 @@ export class TagEntryComponent implements OnInit {
   isFAD(tagName: string): boolean {
     return tagName === 'Routed To FAD';
   }
-  
+
+  calculateAssetValue(purchaseDate: Date, price: number): number {
+    const currentDate = new Date();
+    const purchaseDateObj = new Date(purchaseDate);
+    const yearsSincePurchase = (currentDate.getTime() - purchaseDateObj.getTime()) / (1000 * 3600 * 24 * 365);
+
+    if (yearsSincePurchase > 5) {
+      return 0;
+    } else if (yearsSincePurchase > 4) {
+      return price * 0.30; // 70% less
+    } else if (yearsSincePurchase > 3) {
+      return price * 0.50; // 50% less
+    } else if (yearsSincePurchase > 2) {
+      return price * 0.70; // 30% less
+    } else if (yearsSincePurchase > 1) {
+      return price * 0.80; // 20% less
+    } else {
+      return price * 0.90; // 10% less
+    }
+  }
+
 }
 
